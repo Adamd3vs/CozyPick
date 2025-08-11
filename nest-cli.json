@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/cozypick-api/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/cozypick-api/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/cozypick-api",
+  "projects": {
+    "cozypick-api": {
+      "type": "application",
+      "root": "apps/cozypick-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/cozypick-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cozypick-api/tsconfig.app.json"
+      }
+    },
+    "cozypick-batch": {
+      "type": "application",
+      "root": "apps/cozypick-batch",
+      "entryFile": "main",
+      "sourceRoot": "apps/cozypick-batch/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cozypick-batch/tsconfig.app.json"
+      }
+    }
+  }
+}
