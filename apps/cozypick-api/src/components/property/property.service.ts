@@ -43,7 +43,7 @@ export class PropertyService {
     public async getProperty(memberId: ObjectId | null, propertyId: ObjectId): Promise<Property> {
         const search = {
             _id: propertyId,
-            placeStatus: PlaceStatus.ACTIVE,
+            PlaceStatus: PlaceStatus.ACTIVE,
         };
 
         const targetProperty: Property | null = await this.propertyModel.findOne(search).exec();
@@ -80,7 +80,7 @@ export class PropertyService {
         const search = {
             _id: input._id,
             memberId: memberId,
-            placeStatus: PlaceStatus.ACTIVE,
+            PlaceStatus: PlaceStatus.ACTIVE,
         };
 
         if (placeStatus === PlaceStatus.CLOSED) closedAt = moment().toDate();
