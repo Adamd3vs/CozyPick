@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Member } from 'apps/cozypick-api/src/libs/dto/member/member';
 import { Property } from 'apps/cozypick-api/src/libs/dto/property/property';
 import { MemberStatus, MemberType } from 'apps/cozypick-api/src/libs/enums/member.enum';
-import { PlaceStatus } from 'apps/cozypick-api/src/libs/enums/property.enum';
+import { PropertyStatus } from 'apps/cozypick-api/src/libs/enums/property.enum';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BatchService {
   ) {}
  public async batchRollback(): Promise<void> {
   await this.propertyModel.updateMany(
-    { PlaceStatus: PlaceStatus.ACTIVE },
+    { propertyStatus: PropertyStatus.ACTIVE },
     { propertyRank: 0 }
   ).exec();
 
@@ -30,7 +30,7 @@ export class BatchService {
 
   public async batchTopProperties(): Promise<void> {
   const properties: Property[] = await this.propertyModel.find({
-    PlaceStatus: PlaceStatus.ACTIVE,
+    propertyStatus: PropertyStatus.ACTIVE,
     propertyRank: 0,
   }).exec();
 

@@ -1,6 +1,6 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum PlaceType {
+export enum PropertyType {
 	  HOTELS = 'HOTELS',
   HANOK_STAY = 'HANOK_STAY',
   MOTEL = 'HOSTEL',
@@ -19,20 +19,20 @@ export enum PlaceType {
   OUTLET_MALL = 'OUTLET_MALL',
   FESTIVAL = 'FESTIVAL',
 }
-registerEnumType(PlaceType, {
-	name: 'PlaceType',
+registerEnumType(PropertyType, {
+	name: 'PropertyType',
 });
 
-export enum PlaceStatus {
+export enum PropertyStatus {
 	ACTIVE = 'ACTIVE',
 	CLOSED = 'CLOSED',
 	DELETE = 'DELETE',
 }
-registerEnumType(PlaceStatus, {
-	name: 'PlaceStatus',
+registerEnumType(PropertyStatus, {
+	name: 'PropertyStatus',
 });
 
-export enum PlaceLocation {
+export enum PropertyLocation {
 	SEOUL = 'SEOUL',
 	BUSAN = 'BUSAN',
 	INCHEON = 'INCHEON',
@@ -43,6 +43,6 @@ export enum PlaceLocation {
 	DAEJON = 'DAEJON',
 	JEJU = 'JEJU',
 }
-registerEnumType(PlaceLocation, {
-	name: 'PlaceLocation',
+registerEnumType(PropertyLocation, {
+	name: 'PropertyLocation',
 });

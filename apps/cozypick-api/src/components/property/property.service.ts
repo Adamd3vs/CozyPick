@@ -5,7 +5,7 @@ import { Properties, Property } from '../../libs/dto/property/property';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { AgentPropertiesInquiry, AllPropertiesInquiry, OrdinaryInquiry, PropertiesInquiry, PropertyInput } from '../../libs/dto/property/property.input';
 import { MemberService } from '../member/member.service';
-import { PlaceStatus } from '../../libs/enums/property.enum';
+import { PropertyStatus } from '../../libs/enums/property.enum';
 import {StatisticModifier, T } from '../../libs/types/common';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import  {ViewService } from '../view/view.service';
@@ -43,7 +43,7 @@ export class PropertyService {
     public async getProperty(memberId: ObjectId | null, propertyId: ObjectId): Promise<Property> {
         const search = {
             _id: propertyId,
-            PlaceStatus: PlaceStatus.ACTIVE,
+            propertyStatus: PropertyStatus.ACTIVE,
         };
 
         const targetProperty: Property | null = await this.propertyModel.findOne(search).exec();
@@ -76,15 +76,15 @@ export class PropertyService {
     }
 
     public async updateProperty(memberId: ObjectId, input: PropertyUpdate): Promise<Property> {
-        let { placeStatus, closedAt, deletedAt } = input;
+        let { propertyStatus, closedAt, deletedAt } = input;
         const search = {
             _id: input._id,
             memberId: memberId,
-            PlaceStatus: PlaceStatus.ACTIVE,
+            propertyStatus: PropertyStatus.ACTIVE,
         };
 
-        if (placeStatus === PlaceStatus.CLOSED) closedAt = moment().toDate();
-        else if (placeStatus === PlaceStatus.DELETE) deletedAt = moment().toDate();
+        if (propertyStatus === PropertyStatus.CLOSED) closedAt = moment().toDate();
+        else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
 
         const result = await this.propertyModel.findOneAndUpdate(search,input,{new:true}).exec();
         if(!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
@@ -101,7 +101,7 @@ export class PropertyService {
 }
 
 public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties> {
-  const match: T = { PlaceStatus: PlaceStatus.ACTIVE };
+  const match: T = { propertyStatus: PropertyStatus.ACTIVE };
   const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
   this.shapeMatchQuery(match, input);
@@ -146,10 +146,10 @@ public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promis
         text
      } = input.search;
      if(memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-     if(locationList) match.PlaceLocation = {$in: locationList} ;
+     if(locationList) match.propertyLocation = {$in: locationList} ;
      if(roomsList)match.propertyRooms = {$in: roomsList};
      if(bedsList)match.propertyBeds = {$in:bedsList};
-     if(typeList)match.PlaceType={$in:typeList};
+     if(typeList)match.propertyType={$in:typeList};
 
      if(pricesRange)match.propertyPrice = {$gte: pricesRange.start, $lte:pricesRange.end};
      if(periodsRange)match.createdAt = {$gte: periodsRange.start, $lte:periodsRange.end};
@@ -174,12 +174,12 @@ public async getVisited(memberId: ObjectId, input : OrdinaryInquiry) : Promise<P
 
 
  public async getAgentProperties(memberId: ObjectId, input:AgentPropertiesInquiry): Promise<Properties>{
-    const {placeStatus} = input.search;
-    if(placeStatus=== PlaceStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
+    const {propertyStatus} = input.search;
+    if(propertyStatus=== PropertyStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
 
     const match: T = {
         memberId: memberId,
-        placeStatus: placeStatus ?? {$ne: PlaceStatus.DELETE},
+        propertyStatus: propertyStatus ?? {$ne: PropertyStatus.DELETE},
     };
     const sort : T = {[input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC};
     const result = await this.propertyModel.aggregate([
@@ -203,7 +203,7 @@ public async getVisited(memberId: ObjectId, input : OrdinaryInquiry) : Promise<P
  }
   public async likeTargetProperty(memberId: ObjectId, likeRefId: ObjectId): Promise<Property>{
          const target: Property | null = await this.propertyModel.findOne(
-             {_id: likeRefId, PlaceStatus: PlaceStatus.ACTIVE}).exec();
+             {_id: likeRefId, propertyStatus: PropertyStatus.ACTIVE}).exec();
              if(!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
  
              const input: LikeInput = {
@@ -220,15 +220,15 @@ public async getVisited(memberId: ObjectId, input : OrdinaryInquiry) : Promise<P
               return result;
      }
  public async getAllPropertiesByAdmin(input: AllPropertiesInquiry): Promise<Properties> {
-    const { PlaceStatus, PlaceLocationList } = input.search;
+    const { propertyStatus, propertyLocationList } = input.search;
     const match: T = {};
     
     const sort: T = {
         [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC
     };
 
-    if (PlaceStatus) match.PlaceStatus = PlaceStatus;
-    if (PlaceLocationList) match.PlaceLocation = { $in: PlaceLocationList };
+    if (propertyStatus) match.propertyStatus = propertyStatus;
+    if (propertyLocationList) match.propertyLocation = { $in: propertyLocationList };
 
     const result = await this.propertyModel.aggregate([
         { $match: match },
@@ -258,12 +258,12 @@ public async updatePropertyByAdmin(input: PropertyUpdate): Promise<Property> {
 
     const search: T = {
         _id: input._id,
-        placeStatus: PlaceStatus.ACTIVE,
+        propertyStatus: PropertyStatus.ACTIVE,
     };
 
-    if (input.placeStatus === PlaceStatus.CLOSED) {
+    if (input.propertyStatus === PropertyStatus.CLOSED) {
         input.closedAt = moment().toDate();
-    } else if (input.placeStatus === PlaceStatus.DELETE) {
+    } else if (input.propertyStatus === PropertyStatus.DELETE) {
         input.deletedAt = moment().toDate();
     }
 
@@ -292,7 +292,7 @@ public async removePropertyByAdmin(propertyId: ObjectId): Promise<Property> {
     
     const search = {
         _id: propertyId,
-        PlaceStatus: PlaceStatus.DELETE,
+        propertyStatus: PropertyStatus.DELETE,
     };
 
     const result = await this.propertyModel.findOneAndDelete(search).exec();
@@ -306,7 +306,3 @@ public async removePropertyByAdmin(propertyId: ObjectId): Promise<Property> {
 
 
 }
-
-
-
-

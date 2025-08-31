@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { ObjectId } from "mongoose";
-import { PlaceLocation, PlaceStatus, PlaceType } from "../../enums/property.enum";
+import { PropertyLocation, PropertyStatus, PropertyType } from "../../enums/property.enum";
 import { Member, TotalCounter } from "../member/member";
 import { FieldsOnCorrectTypeRule } from "graphql";
 import { MeLiked } from "../like/like";
@@ -12,14 +12,15 @@ export class Property {
     @Field(()=> String)
     _id:ObjectId;
 
-    @Field(()=> PlaceType)
-    placeType: PlaceType;
+    @Field(()=> PropertyType)
+    propertyType: PropertyType;
 
-    @Field(()=> PlaceStatus)
-    placeStatus: PlaceStatus;
+    @Field(()=> PropertyStatus)
+    propertyStatus: PropertyStatus;
 
-    @Field(()=> PlaceLocation)
-    placeLocation: PlaceLocation;
+    @Field(()=> PropertyLocation)
+    propertyLocation: PropertyLocation;
+
 
     @Field(()=> String)
     propertyAddress: string;

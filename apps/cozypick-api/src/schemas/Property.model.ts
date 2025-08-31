@@ -1,23 +1,23 @@
 import { Schema } from 'mongoose';
-import { PlaceLocation, PlaceStatus, PlaceType } from '../libs/enums/property.enum';
+import { PropertyLocation, PropertyStatus, PropertyType } from '../libs/enums/property.enum';
 
 const PropertySchema = new Schema(
 	{
-		PlaceType: {
+		propertyType: {
 			type: String,
-			enum: PlaceType,
+			enum: PropertyType,
 			required: true,
 		},
 
-		PlaceStatus: {
+		propertyStatus: {
 			type: String,
-			enum: PlaceStatus,
-			default: PlaceStatus.ACTIVE,
+			enum: PropertyStatus,
+			default: PropertyStatus.ACTIVE,
 		},
 
-		PlaceLocation: {
+		propertyLocation: {
 			type: String,
-			enum: PlaceLocation,
+			enum: PropertyLocation,
 			required: true,
 		},
 
@@ -85,21 +85,14 @@ const PropertySchema = new Schema(
 			default: false,
 		},
 
-		propertyRent: {
-			type: Boolean,
-			default: false,
-		},
-
 		memberId: {
 			type: Schema.Types.ObjectId,
 			required: true,
 			ref: 'Member',
 		},
-
-		CLOSEDAt: {
+		closedAt: {
 			type: Date,
 		},
-
 		deletedAt: {
 			type: Date,
 		},
@@ -111,6 +104,7 @@ const PropertySchema = new Schema(
 	{ timestamps: true, collection: 'properties' },
 );
 
-PropertySchema.index({ PlaceType: 1, PlaceLocation: 1, propertyTitle: 1, propertyPrice: 1 }, { unique: true });
+PropertySchema.index({ propertyType: 1, propertyLocation: 1, propertyTitle: 1, propertyPrice: 1 }, { unique: true });
 
 export default PropertySchema;
+

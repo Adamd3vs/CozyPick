@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min } from "class-validator";
-import { PlaceLocation, PlaceStatus, PlaceType } from "../../enums/property.enum";
+import { PropertyLocation, PropertyStatus, PropertyType } from "../../enums/property.enum";
 import { ObjectId, StringExpressionOperatorReturningArray } from "mongoose";
 import { availableAgentSorts, availableOptions, availablePropertySorts } from "../../types/config";
 import { Direction } from "../../enums/common.enum";
@@ -10,12 +10,12 @@ import { Direction } from "../../enums/common.enum";
 export class PropertyInput {
 
     @IsNotEmpty()
-    @Field(()=> PlaceType)
-    PlaceType:PlaceType;
+    @Field(()=> PropertyType)
+    propertyType:PropertyType;
 
     @IsNotEmpty()
-    @Field(()=> PlaceLocation)
-    PlaceLocation:PlaceLocation;
+    @Field(()=> PropertyLocation)
+    propertyLocation:PropertyLocation;
 
     @IsNotEmpty()
     @Length(3,100)
@@ -25,27 +25,27 @@ export class PropertyInput {
     @IsNotEmpty()
     @Length(3,100)
     @Field(()=> String)
-    propertyTitle:string;
+    propertyTitle?:string;
 
     @IsNotEmpty()
     @Field(()=> Number)
-    propertyPrice:number;
+    propertyPrice?:number;
 
     @IsNotEmpty()
     @Field(()=> Number)
-    propertySquare:number;
+    propertySquare?:number;
     
     @IsNotEmpty()
     @IsInt()
     @Min(1)
     @Field(()=> Int)
-    propertyBeds:number;
+    propertyBeds?:number;
     
     @IsNotEmpty()
     @IsInt()
     @Min(1)
     @Field(()=> Int)
-    propertyRooms:number;
+    propertyRooms?:number;
 
     @IsNotEmpty()
     @Field(()=> [String])
@@ -94,6 +94,7 @@ export class PeriodsRange{
     end:number;
 }
 
+
 @InputType()
 class PISearch {
     @IsOptional()
@@ -101,12 +102,12 @@ class PISearch {
     memberId?: ObjectId;
     
     @IsOptional()
-    @Field(() => [PlaceLocation], { nullable: true })
-    locationList?: PlaceLocation[];
+    @Field(() => [PropertyLocation], { nullable: true })
+    locationList?: PropertyLocation[];
  
     @IsOptional()
-    @Field(() => [PlaceType], { nullable: true })
-    typeList?: PlaceType [] ;
+    @Field(() => [PropertyType], { nullable: true })
+    typeList?: PropertyType [] ;
 
     @IsOptional()
     @Field(()=> [Int], { nullable: true })
@@ -168,8 +169,8 @@ export class PropertiesInquiry{
 @InputType()
 class APISearch{
     @IsOptional()
-    @Field(()=> PlaceStatus, {nullable:true})
-    placeStatus?:PlaceStatus;
+    @Field(()=> PropertyStatus, {nullable:true})
+    propertyStatus?:PropertyStatus;
 }
 
 @InputType()
@@ -202,12 +203,12 @@ export class AgentPropertiesInquiry{
 class ALPSearch {
     
     @IsOptional()
-    @Field(() => PlaceStatus, { nullable: true })
-    PlaceStatus?: PlaceStatus;
+    @Field(() => PropertyStatus, { nullable: true })
+    propertyStatus?: PropertyStatus;
 
     @IsOptional()
-    @Field(() => [PlaceLocation], { nullable: true })
-    PlaceLocationList?: PlaceLocation[];
+    @Field(() => [PropertyLocation], { nullable: true })
+    propertyLocationList?: PropertyLocation[];
 };
 @InputType()
 export class AllPropertiesInquiry {
