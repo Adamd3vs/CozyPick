@@ -15,6 +15,6 @@ async function bootstrap() {
   app.use("/uploads", express.static("./uploads")); //upload papkasini static qilib beramiz
 
   app.useWebSocketAdapter(new WsAdapter(app));
-  await app.listen(process.env.PORT_API ?? 3000);
+  await app.listen(process.env.PORT_API ?? 3001);
 }
 bootstrap();

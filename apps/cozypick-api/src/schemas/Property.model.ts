@@ -80,11 +80,7 @@ const PropertySchema = new Schema(
 			type: String,
 		},
 
-		propertyBarter: {
-			type: Boolean,
-			default: false,
-		},
-
+		
 		memberId: {
 			type: Schema.Types.ObjectId,
 			required: true,

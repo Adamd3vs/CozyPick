@@ -4,6 +4,6 @@ import { clear } from 'console';
 
 async function bootstrap() {
   const app = await NestFactory.create(BatchModule);
-  await app.listen(process.env.PORT_BATCH ?? 3001);
+  await app.listen(process.env.PORT_BATCH ?? 3003);
 }
 bootstrap();

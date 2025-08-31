@@ -14,6 +14,6 @@ import MemberSchema from 'apps/cozypick-api/src/schemas/Member.model';
     MongooseModule.forFeature([{name: 'Member', schema: MemberSchema }]),
   ],
   controllers: [BatchController],
-  providers: [BatchService],
+   providers: [BatchService],
 })
 export class BatchModule {}

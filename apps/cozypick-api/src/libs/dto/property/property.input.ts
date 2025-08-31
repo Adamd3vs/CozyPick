@@ -56,9 +56,6 @@ export class PropertyInput {
     @Field(()=> String,{nullable:true})
     propertyDesc?: string;
 
-    @IsOptional()
-    @Field(()=> Boolean,{nullable:true})
-    propertyRent?:boolean;
     
     memberId?:ObjectId
 

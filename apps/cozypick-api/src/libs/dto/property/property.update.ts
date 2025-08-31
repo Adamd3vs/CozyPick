@@ -67,10 +67,6 @@ export class PropertyUpdate {
         
     @IsOptional()
     @Field(()=> Boolean,{nullable:true})
-    propertyBarter?:boolean;
-         
-    @IsOptional()
-    @Field(()=> Boolean,{nullable:true})
     propertyRent?:boolean;
 
     closedAt?:Date;
