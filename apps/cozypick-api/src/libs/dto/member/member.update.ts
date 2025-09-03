@@ -8,6 +8,10 @@ import { Member } from "./member";
 @InputType()
 export class MemberUpdate {
 
+    @IsNotEmpty()
+	@Field(() => String)
+	_id: ObjectId;
+
     @IsOptional()
     @Field(()=> MemberType,{nullable:true})
     memberType?:MemberType;

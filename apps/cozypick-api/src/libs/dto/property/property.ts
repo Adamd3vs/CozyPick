@@ -21,7 +21,6 @@ export class Property {
     @Field(()=> PropertyLocation)
     propertyLocation: PropertyLocation;
 
-
     @Field(()=> String)
     propertyAddress: string;
 
@@ -57,10 +56,6 @@ export class Property {
 
     @Field(()=> String,{nullable:true})
     propertyDesc?:string;
-    
-
-    @Field(()=> Boolean)
-    propertyRent:boolean;
     
     @Field(()=> String)
     memberId:ObjectId;
