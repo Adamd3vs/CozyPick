@@ -74,7 +74,7 @@ public async updateComment(memberId: ObjectId, input: CommentUpdate): Promise<Co
         },
         input,
         { new: true },
-    );
+    ).exec();
 
     if (!result) {
         throw new InternalServerErrorException(Message.UPDATE_FAILED);

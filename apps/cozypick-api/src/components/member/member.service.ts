@@ -6,7 +6,7 @@ import { AgentsInquiry, LoginInput, MemberInput, MembersInquiry } from '../../li
 import { MemberStatus, MemberType } from '../../libs/enums/member.enum';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { AuthService } from '../auth/auth.service';
-import { AdminUpdateByAdmin, MemberUpdate, MemberUpdateByAdmin } from '../../libs/dto/member/member.update';
+import { AdminUpdateByAdmin, MemberUpdate } from '../../libs/dto/member/member.update';
 import { StatisticModifier, T } from '../../libs/types/common';
 import { ViewService } from '../view/view.service';
 import { ViewGroup } from '../../libs/enums/view.enum';
@@ -70,7 +70,7 @@ export class MemberService {
             { new: true }
         ).exec();
         if (!result) {
-            throw new InternalServerErrorException(Message.UPLOAD_FAILED);
+            throw new InternalServerErrorException(Message.UPDATE_FAILED);
         }
         result.accessToken = await this.authService.createToken(result);
         return result;
@@ -209,7 +209,7 @@ console.log('FollowingId:', followingId);
 
         return result[0];
     }
-     public async updateMemberByAdmin(input:MemberUpdateByAdmin):Promise<Member>{
+     public async updateMemberByAdmin(input:MemberUpdate):Promise<Member>{
         const result = await this.memberModel.findByIdAndUpdate(
             {_id:input._id},
             {memberStatus: input.memberStatus,},

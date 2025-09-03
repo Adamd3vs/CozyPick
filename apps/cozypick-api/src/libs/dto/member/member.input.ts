@@ -92,29 +92,28 @@ class MISearch{
     text?:string;
 }
 
-@InputType() 
+@InputType()
 export class MembersInquiry {
- @IsNotEmpty()
- @Min(1)
- @Field(()=> Int)
- page: number;
+	@IsNotEmpty()
+	@Min(1)
+	@Field(() => Int)
+	page: number;
 
- @IsNotEmpty()
- @Min(1)
- @Field(()=> Int)
- limit: number;
+	@IsNotEmpty()
+	@Min(1)
+	@Field(() => Int)
+	limit: number;
 
- @IsOptional()
- @IsIn([availableMemberSorts])
- @Field(()=> String,{nullable:true})
- sort?: string;
+	@IsOptional()
+	@IsIn(availableMemberSorts)
+	@Field(() => String, { nullable: true })
+	sort?: string;
 
- @IsOptional()
- @Field(()=> Direction,{nullable:true})
- direction?: Direction;
+	@IsOptional()
+	@Field(() => Direction, { nullable: true })
+	direction?: Direction;
 
- @IsNotEmpty()
- @Field(()=> MISearch)
- search: MISearch
- 
+	@IsNotEmpty()
+	@Field(() => MISearch)
+	search: MISearch;
 }
