@@ -136,23 +136,19 @@ public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promis
     const {
         memberId,
         locationList,
-        roomsList,
-        bedsList,
+        categoryList,
         typeList,
         periodsRange,
         pricesRange,
-        squaresRange,
         options,
         text
      } = input.search;
      if(memberId) match.memberId = shapeIntoMongoObjectId(memberId);
      if(locationList && locationList.length) match.propertyLocation = {$in: locationList} ;
-     if(roomsList && roomsList.length)match.propertyRooms = {$in: roomsList};
-     if(bedsList && bedsList.length)match.propertyBeds = {$in:bedsList};
+     if(categoryList && categoryList.length)match.propertyCategory = {$in:categoryList};
      if(typeList && typeList.length)match.propertyType={$in:typeList};
      if(pricesRange)match.propertyPrice = {$gte: pricesRange.start, $lte:pricesRange.end};
      if(periodsRange)match.createdAt = {$gte: periodsRange.start, $lte:periodsRange.end};
-     if(squaresRange)match.propertySquare = {$gte: squaresRange.start, $lte:squaresRange.end};
 
      if(text) match.propertyTitle = {$regex: new RegExp(text, "i")};
      if(options) {

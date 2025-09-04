@@ -18,6 +18,7 @@ export enum PropertyType {
   AQUARIUM = 'AQUARIUM',
   OUTLET_MALL = 'OUTLET_MALL',
   FESTIVAL = 'FESTIVAL',
+  RESTAURANT = 'RESTAURANT'
 }
 registerEnumType(PropertyType, {
 	name: 'PropertyType',
@@ -45,4 +46,17 @@ export enum PropertyLocation {
 }
 registerEnumType(PropertyLocation, {
 	name: 'PropertyLocation',
+});
+
+
+export enum PropertyCategory {
+  NATURE = 'NATURE',
+  CULTURE = 'CULTURE',
+  STAY = 'STAY',
+  ENTERTAINMENT = 'ENTERTAINMENT',
+  RESTAURANT='RESTAURANT'
+}
+
+registerEnumType(PropertyCategory, {
+  name: 'PropertyCategory',
 });

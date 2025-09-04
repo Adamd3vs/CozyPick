@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min } from "class-validator";
-import { PropertyLocation, PropertyStatus, PropertyType } from "../../enums/property.enum";
+import { PropertyCategory, PropertyLocation, PropertyStatus, PropertyType } from "../../enums/property.enum";
 import { ObjectId, StringExpressionOperatorReturningArray } from "mongoose";
 import { availableAgentSorts, availableOptions, availablePropertySorts } from "../../types/config";
 import { Direction } from "../../enums/common.enum";
@@ -30,22 +30,10 @@ export class PropertyInput {
     @IsNotEmpty()
     @Field(()=> Number)
     propertyPrice?:number;
-
-    @IsNotEmpty()
-    @Field(()=> Number)
-    propertySquare?:number;
     
     @IsNotEmpty()
-    @IsInt()
-    @Min(1)
-    @Field(()=> Int)
-    propertyBeds?:number;
-    
-    @IsNotEmpty()
-    @IsInt()
-    @Min(1)
-    @Field(()=> Int)
-    propertyRooms?:number;
+    @Field(()=> PropertyCategory)
+    propertyCategory?:PropertyCategory;
 
     @IsNotEmpty()
     @Field(()=> [String])
@@ -73,14 +61,7 @@ export class PricesRange{
     @Field(() => Int)
     end:number;
 }
-@InputType()
-export class SquaresRange{
-    @Field(()=> Int)
-    start:number; 
 
-    @Field(() => Int)
-    end:number;
-}
 @InputType()
 export class PeriodsRange{
     
@@ -107,12 +88,8 @@ class PISearch {
     typeList?: PropertyType [] ;
 
     @IsOptional()
-    @Field(()=> [Int], { nullable: true })
-    roomsList?: Number[];
-
-    @IsOptional()
-    @Field(() => [Int], { nullable: true }) 
-    bedsList?: Number [];
+    @Field(() => [PropertyCategory], { nullable: true }) 
+    categoryList?: PropertyCategory [];
 
     @IsOptional()
     @IsIn(availableOptions, { each: true })
@@ -126,10 +103,6 @@ class PISearch {
     @IsOptional()
     @Field(() => PeriodsRange, { nullable: true }) 
     periodsRange?: PeriodsRange;
-
-    @IsOptional()
-    @Field(() => SquaresRange, { nullable: true })
-    squaresRange?: SquaresRange;
 
     @IsOptional()
     @Field(() => String,{ nullable: true })
