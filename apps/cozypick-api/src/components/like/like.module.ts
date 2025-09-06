@@ -3,10 +3,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import LikeSchema from '../../schemas/Like.model';
 import { AuthModule } from '../auth/auth.module';
 import { LikeService } from './like.service';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports:[
-    MongooseModule.forFeature([{name:"Like", schema:LikeSchema}]), 
+    MongooseModule.forFeature([{name:"Like", schema:LikeSchema}])
   ],
   providers: [LikeService],
    exports: [LikeService]

@@ -6,12 +6,14 @@ import { MemberService } from '../member/member.service';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { FollowInquiry } from '../../libs/dto/follow/follow.input';
 import { lookupAuthMemberFollowed, lookupAuthMemberLiked, lookupFollowerData, lookupFollowingData } from '../../libs/types/config';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class FollowService {
     constructor(@InjectModel("Follow") 
     private readonly followModel: Model<Follower | Following>,
     private readonly memberService :MemberService,
+    private readonly notificationService: NotificationService
 ){};
 public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
     if (followerId.toString() === followingId.toString()) {
@@ -25,6 +27,7 @@ public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Fol
 
     await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: 1 });
     await this.memberService.memberStatsEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: 1 });
+    await this.notificationService.createOnFollowSubscribe(followerId, followingId);
 
     return result;
 }

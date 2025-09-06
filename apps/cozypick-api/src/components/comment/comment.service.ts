@@ -10,6 +10,7 @@ import { Comment, Comments,  } from '../../libs/dto/comment/comment';
 import { CommentUpdate } from '../../libs/dto/comment/comment.update';
 import { CommentGroup, CommentStatus } from '../../libs/enums/comment.enum';
 import { lookupMember } from '../../libs/types/config';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class CommentService {
@@ -18,6 +19,7 @@ export class CommentService {
         private readonly memberService: MemberService,
         private readonly propertyService: PropertyService,
         private readonly boardArticleService: BoardArticleService,
+        private readonly notificationService: NotificationService
     ) {}
 
     public async createComment(memberId: ObjectId, input: CommentInput): Promise<Comment> {
@@ -38,7 +40,8 @@ export class CommentService {
                 targetKey: 'propertyComments',
                 modifier: 1,
             });
-            break;
+     await this.notificationService.createOnPropertyComment(input.commentRefId, memberId);
+      break;
 
         case CommentGroup.ARTICLE:
             await this.boardArticleService.boardArticleStatsEditor({

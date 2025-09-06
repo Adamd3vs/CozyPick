@@ -15,6 +15,7 @@ import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../
 import { LikeService } from '../like/like.service';
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class PropertyService {
@@ -23,6 +24,7 @@ export class PropertyService {
         private memberService: MemberService,
         private viewService: ViewService,
         private likeService: LikeService,
+        private readonly notificationService: NotificationService,
     ) {}
 
     public async createProperty(input: PropertyInput): Promise<Property> {
@@ -140,7 +142,6 @@ public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promis
         typeList,
         periodsRange,
         pricesRange,
-        options,
         text
      } = input.search;
      if(memberId) match.memberId = shapeIntoMongoObjectId(memberId);
@@ -151,11 +152,6 @@ public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promis
      if(periodsRange)match.createdAt = {$gte: periodsRange.start, $lte:periodsRange.end};
 
      if(text) match.propertyTitle = {$regex: new RegExp(text, "i")};
-     if(options) {
-        match['$or'] = options.map((ele)=>{
-            return {[ele]: true};
-        });
-     }
 
  };
 public async getFavorites(memberId: ObjectId, input : OrdinaryInquiry) : Promise<Properties| null> {
@@ -212,6 +208,9 @@ public async getVisited(memberId: ObjectId, input : OrdinaryInquiry) : Promise<P
          const result = await this.propertyStatsEditor(
              {_id: likeRefId, targetKey: "propertyLikes", modifier}) ;
               if(!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
+              if (modifier === 1) {
+            await this.notificationService.createOnPropertyLike(likeRefId, memberId);
+  }
               return result;
      }
  public async getAllPropertiesByAdmin(input: AllPropertiesInquiry): Promise<Properties> {

@@ -16,6 +16,7 @@ import { lookupAuthMemberLiked } from '../../libs/types/config';
 import { LikeGroup } from '../../libs/enums/like.enum';
 import { LikeService } from '../like/like.service';
 import { Follower, Following, MeFollowed } from '../../libs/dto/follow/follow';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class MemberService {
@@ -24,6 +25,7 @@ export class MemberService {
         @InjectModel("Follow")private readonly followModel:Model<Follower| Following>, 
     private authService: AuthService,
     private viewService: ViewService,
+    private readonly notificationService: NotificationService,
     private likeService: LikeService){} 
    
     public async signup(input:MemberInput):Promise<Member>{
@@ -32,6 +34,10 @@ export class MemberService {
         try{
         const result = await this.memberModel.create(input);
        result.accessToken =  await this.authService.createToken(result);
+             void this.notificationService
+        .createWelcome(result._id as any)
+        .catch(e => console.warn('createWelcome failed:', e?.message));
+
         return result;
         }catch(err){
             console.log("Error, service Model", err);

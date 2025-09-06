@@ -2,7 +2,7 @@ import { Field, InputType, Int } from "@nestjs/graphql";
 import { IsIn, IsInt, isNotEmpty, IsNotEmpty, IsOptional, Length, Min } from "class-validator";
 import { PropertyCategory, PropertyLocation, PropertyStatus, PropertyType } from "../../enums/property.enum";
 import { ObjectId, StringExpressionOperatorReturningArray } from "mongoose";
-import { availableAgentSorts, availableOptions, availablePropertySorts } from "../../types/config";
+import { availableAgentSorts, availablePropertySorts } from "../../types/config";
 import { Direction } from "../../enums/common.enum";
 
 
@@ -90,11 +90,6 @@ class PISearch {
     @IsOptional()
     @Field(() => [PropertyCategory], { nullable: true }) 
     categoryList?: PropertyCategory [];
-
-    @IsOptional()
-    @IsIn(availableOptions, { each: true })
-    @Field(() => [String], { nullable: true })
-    options?: string[];
 
     @IsOptional()
     @Field(() => PricesRange, { nullable: true })

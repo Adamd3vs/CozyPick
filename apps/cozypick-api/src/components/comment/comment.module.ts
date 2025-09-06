@@ -8,6 +8,7 @@ import { MemberModule } from '../member/member.module';
 import CommentSchema from '../../schemas/Comment.model';
 import { PropertyModule } from '../property/property.module';
 import { BoardArticleModule } from '../board-article/board-article.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
    imports:[
@@ -16,7 +17,8 @@ import { BoardArticleModule } from '../board-article/board-article.module';
     ViewModule,
     MemberModule,
     PropertyModule,
-    BoardArticleModule
+    BoardArticleModule,
+    NotificationModule
   ],
   providers: [CommentResolver, CommentService]
 })
