@@ -187,6 +187,10 @@ console.log('FollowingId:', followingId);
 
             // likeToggle
         const modifier : number= await this.likeService.toggleLike(input);
+        if (modifier === 1 && String(memberId) !== String(likeRefId)) {
+    void this.notificationService.createOnMemberLike(likeRefId as any, memberId as any)
+      .catch(e => console.warn('createOnMemberLike failed:', e?.message));
+  }
         const result = await this.memberStatsEditor(
             {_id: likeRefId, targetKey: "memberLikes", modifier}) ;
              if(!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);

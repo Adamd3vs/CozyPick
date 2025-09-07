@@ -49,7 +49,6 @@ export class NotificationResolver {
     return this.notificationService.unreadCount(meId);
   }
 
-  /** MUTATIONS **/
 
   // Mark single notification as READ
   @UseGuards(AuthGuard)
@@ -61,7 +60,6 @@ export class NotificationResolver {
     return this.notificationService.markRead(meId, shapeIntoMongoObjectId(id));
   }
 
-  // Mark all WAIT notifications as READ
   @UseGuards(AuthGuard)
   @Mutation(() => Int)
   async markAllNotificationsRead(
@@ -70,23 +68,6 @@ export class NotificationResolver {
     return this.notificationService.markAllRead(meId);
   }
 
-  // Update my notification (e.g., status/title/desc if allowed by schema)
-  @UseGuards(AuthGuard)
-  @Roles(MemberType.ADMIN)
-  @Mutation(() => Notification)
-  async updateNotification(
-    @AuthMember('_id') meId: ObjectId,
-    @Args('input') input: UpdateNotificationInput,
-  ): Promise<Notification> {
-    // ensure _id is ObjectId
-    const patched: UpdateNotificationInput = {
-      ...input,
-      _id: shapeIntoMongoObjectId(input._id as any) as any,
-    };
-    return this.notificationService.update(meId, patched);
-  }
-
-  // Remove (delete) a notification by id
   @UseGuards(AuthGuard)
   @Mutation(() => Notification)
   async removeNotification(

@@ -110,7 +110,6 @@ export class NotificationService {
     }).exec();
   }
 
-  // ✅ Welcome
   public async createWelcome(receiverId: ObjectId) {
     await this.ensureMember(receiverId);
     return this.createNotification(
@@ -125,7 +124,6 @@ export class NotificationService {
     );
   }
 
-  // ✅ Property Like
   public async createOnPropertyLike(propertyId: ObjectId, likerId: ObjectId) {
     const prop = await this.propertyModel.findById(propertyId).lean();
     if (!prop) throw new NotFoundException(Message.NO_DATA_FOUND);
@@ -148,8 +146,43 @@ export class NotificationService {
       likerId,
     );
   }
+  public async createOnMemberLike(targetMemberId: ObjectId, likerId: ObjectId) {
 
-  // ✅ Property Comment
+  const member = await this.memberModel.findById(targetMemberId).lean();
+  if (!member) throw new NotFoundException(Message.NO_DATA_FOUND);
+
+  const ownerId = member._id;
+  if (String(ownerId) === String(likerId)) return null;
+
+  await this.ensureMember(likerId);
+  await this.ensureMember(ownerId);
+
+  const existing = await this.notificationModel.findOne({
+    notificationType: NotificationType.LIKE,
+    notificationGroup: NotificationGroup.MEMBER,
+    receiverId: ownerId,
+    actorId: likerId,
+  }).lean();
+  if (existing) return existing;
+
+  const desc =
+    (member as any).memberNick
+      ? `${(member as any).memberNick} received a like `
+      : 'Someone liked your profile.';
+
+  return this.createNotification(
+    {
+      notificationType: NotificationType.LIKE,
+      notificationGroup: NotificationGroup.MEMBER,
+      notificationTitle: "Liked you",
+      notificationDesc: desc,
+      receiverId: ownerId,
+    } as any,
+    likerId,
+  );
+}
+
+
   public async createOnPropertyComment(propertyId: ObjectId, commenterId: ObjectId) {
     const prop = await this.propertyModel.findById(propertyId).lean();
     if (!prop) throw new NotFoundException(Message.NO_DATA_FOUND);
@@ -173,7 +206,6 @@ export class NotificationService {
     );
   }
 
-  // ✅ Follow Subscribe
   public async createOnFollowSubscribe(followerId: ObjectId, followingId: ObjectId) {
     if (String(followerId) === String(followingId)) return null;
 
