@@ -91,8 +91,6 @@ class PISearch {
     @Field(() => [PropertyCategory], { nullable: true }) 
     categoryList?: PropertyCategory [];
 
-   
-
     @IsOptional()
     @Field(() => PricesRange, { nullable: true })
     pricesRange?: PricesRange;

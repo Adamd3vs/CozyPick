@@ -1,0 +1,17 @@
+// apps/cozypick-api/src/notice/notice.module.ts
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { NoticeService } from './notice.service';
+import { NoticeResolver } from './notice.resolver';
+import NoticeSchema from '../../schemas/Notice.model';
+import { AuthModule } from '../auth/auth.module';
+
+@Module({
+  imports: [
+    MongooseModule.forFeature([{ name: 'Notice', schema: NoticeSchema }]),
+AuthModule  
+],
+  providers: [NoticeService, NoticeResolver],
+  exports: [NoticeService],
+})
+export class NoticeModule {}
