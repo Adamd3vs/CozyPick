@@ -1,6 +1,8 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { NotificationType, NotificationGroup, NotificationStatus } from '../../enums/notification.enum';
+import { IsOptional } from 'class-validator';
+import { Direction } from '../../enums/common.enum';
 
 @InputType()
 export class CreateNotificationInput {
@@ -29,20 +31,32 @@ export class CreateNotificationInput {
   articleId?: ObjectId;
 }
 
-@InputType()
+
+@InputType('NotificationSearch')
+export class NotificationSearch {
+  @Field(() => String, { nullable: true }) 
+  receiverId?: string;
+  @Field(() => String, { nullable: true }) 
+  authorId?: string;
+
+  @Field(() => [NotificationStatus], { nullable: true })
+  statusList?: NotificationStatus[];
+
+  @Field(() => [NotificationGroup], { nullable: true })
+  groupList?: NotificationGroup[];
+
+  @Field(() => [NotificationType], { nullable: true })
+  typeList?: NotificationType[];
+}
+
+@InputType('NotificationInquiry')
 export class NotificationInquiry {
-  @Field(() => String, { nullable: true })
-  receiverId?: ObjectId;
+  @Field(() => Int) page: number;
+  @Field(() => Int) limit: number;
 
-  @Field(() => String, { nullable: true })
-  authorId?: ObjectId;
+  @Field(() => String, { nullable: true }) sort?: string;    
+  @Field(() => Direction, { nullable: true }) direction?: Direction;
 
-  @Field(() => NotificationStatus, { nullable: true })
-  notificationStatus?: NotificationStatus;
-
-  @Field(() => NotificationGroup, { nullable: true })
-  notificationGroup?: NotificationGroup;
-
-  @Field(() => NotificationType, { nullable: true })
-  notificationType?: NotificationType;
+  @Field(() => NotificationSearch, { nullable: true })
+  search?: NotificationSearch;
 }

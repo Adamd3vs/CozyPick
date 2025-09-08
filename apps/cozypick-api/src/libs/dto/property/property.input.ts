@@ -49,7 +49,7 @@ export class PropertyInput {
 
     @IsOptional()
     @Field(()=> Date,{nullable:true})
-    constructedAt?:boolean;
+    constructedAt?:Date;
 }
 
 @InputType()

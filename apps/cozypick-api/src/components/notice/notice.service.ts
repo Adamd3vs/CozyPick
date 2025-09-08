@@ -71,8 +71,7 @@ export class NoticeService {
     return doc?.toJSON?.() ?? doc;
   }
 
- 
- public async getNotices(inquiry: NoticesInquiry): Promise<Notices> {
+   public async getNotices(inquiry: NoticesInquiry): Promise<Notices> {
     const {
       page = 1,
       limit = 20,
@@ -81,22 +80,29 @@ export class NoticeService {
       search,
     } = inquiry;
 
-    const match: any = { noticeStatus: { $ne: NoticeStatus.DELETE } };
+    const match: any = {};
+    if (search?.noticeStatus) {
+      match.noticeStatus = search.noticeStatus;
+    } else {
+      match.noticeStatus = NoticeStatus.ACTIVE;
+    }
 
     if (search?.noticeCategory) match.noticeCategory = search.noticeCategory;
-    if (search?.noticeStatus) match.noticeStatus = search.noticeStatus;
     if (search?.memberId) match.memberId = shapeIntoMongoObjectId(search.memberId);
 
     if (search?.text) {
+      const rx = new RegExp(search.text, 'i');
       match.$or = [
-        { noticeTitle: { $regex: new RegExp(search.text, 'i') } },
-        { noticeContent: { $regex: new RegExp(search.text, 'i') } },
+        { noticeTitle: { $regex: rx } },
+        { noticeContent: { $regex: rx } },
       ];
     }
 
-    const sortStage: any = { [sort]: direction };
+    // Mongo sort dir: 1 | -1
+    const sortDir = direction === Direction.ASC ? 1 : -1;
+    const sortStage: Record<string, 1 | -1> = { [sort]: sortDir };
 
-    const result = await this.noticeModel.aggregate([
+    const pipeline = [
       { $match: match },
       { $sort: sortStage },
       {
@@ -108,14 +114,12 @@ export class NoticeService {
           metaCounter: [{ $count: 'total' }],
         },
       },
-    ]).exec();
+    ];
 
-    if (!result.length) {
-      throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-    }
-
-    const notices = result[0].list;
-    const totalCount = result[0].metaCounter[0]?.total ?? 0;
+    const result = await this.noticeModel.aggregate(pipeline).exec();
+    const first = result?.[0] ?? { list: [], metaCounter: [] };
+    const notices = first.list ?? [];
+    const totalCount = first.metaCounter?.[0]?.total ?? 0;
 
     return {
       notices,
@@ -124,4 +128,5 @@ export class NoticeService {
       limit,
     };
   }
+
 }

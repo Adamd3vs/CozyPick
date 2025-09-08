@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, Int, ObjectType, Field } from '@nestjs
 import { UseGuards } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { NotificationService } from './notification.service';
-import { Notification } from '../../libs/dto/notification/notification';
+import { Notification, Notifications } from '../../libs/dto/notification/notification';
 import { UpdateNotificationInput } from '../../libs/dto/notification/notification.update';
 import { PropertiesInquiry } from '../../libs/dto/property/property.input';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -11,32 +11,20 @@ import { AuthMember } from '../auth/decorators/authMember.decorator';
 import { shapeIntoMongoObjectId } from '../../libs/types/config';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { MemberType } from '../../libs/enums/member.enum';
+import { NoticesInquiry } from '../../libs/dto/notice/notice.input';
+import { NotificationInquiry } from '../../libs/dto/notification/notification.input';
 
-@ObjectType()
-class MetaCounter {
-  @Field(() => Int)
-  total!: number;
-}
-
-@ObjectType()
-class NotificationPage {
-  @Field(() => [Notification])
-  list!: Notification[];
-
-  @Field(() => [MetaCounter])
-  metaCounter!: MetaCounter[];
-}
 
 @Resolver(() => Notification)
 export class NotificationResolver {
   constructor(private readonly notificationService: NotificationService) {}
 
   @UseGuards(AuthGuard)
-  @Query(() => NotificationPage)
+  @Query(() => Notifications)
   async myNotifications(
     @AuthMember('_id') meId: ObjectId,
-    @Args('input') input: PropertiesInquiry,
-  ): Promise<NotificationPage> {
+    @Args('input') input: NotificationInquiry,
+  ): Promise<Notifications> {
     return (await this.notificationService.myNotifications(meId, input)) as any;
   }
 

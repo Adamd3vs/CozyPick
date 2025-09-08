@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Notification } from '../../libs/dto/notification/notification';
-import { CreateNotificationInput } from '../../libs/dto/notification/notification.input';
+import { CreateNotificationInput, NotificationInquiry } from '../../libs/dto/notification/notification.input';
 import { UpdateNotificationInput } from '../../libs/dto/notification/notification.update';
 import { NotificationGroup, NotificationStatus, NotificationType } from '../../libs/enums/notification.enum';
 import { Message } from '../../libs/enums/common.enum';
@@ -10,6 +10,7 @@ import { Property } from '../../libs/dto/property/property';
 import { Member } from '../../libs/dto/member/member';
 import { T } from '../../libs/types/common';
 import { PropertiesInquiry } from '../../libs/dto/property/property.input';
+import { NoticesInquiry } from '../../libs/dto/notice/notice.input';
 
 @Injectable()
 export class NotificationService {
@@ -29,7 +30,6 @@ export class NotificationService {
     await this.memberModel.updateOne({ _id: receiverId }, { $inc: { memberNotifications: delta } }).exec();
   }
 
-  // ✅ signaturani soddalashtirdim: receiverId input ichida keladi; alohida param kerak emas
   public async createNotification(input: CreateNotificationInput, authorId: ObjectId): Promise<Notification> {
     try {
       await this.ensureMember(input.receiverId as any);
@@ -84,7 +84,7 @@ export class NotificationService {
 
   public async myNotifications(
     receiverId: ObjectId,
-    input: PropertiesInquiry,
+    input: NotificationInquiry,
   ): Promise<{ list: Notification[]; metaCounter: { total: number }[] }> {
     const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? -1 };
 

@@ -151,7 +151,17 @@ public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promis
      if(pricesRange)match.propertyPrice = {$gte: pricesRange.start, $lte:pricesRange.end};
      if(periodsRange)match.createdAt = {$gte: periodsRange.start, $lte:periodsRange.end};
 
-     if(text) match.propertyTitle = {$regex: new RegExp(text, "i")};
+     if (text) {
+  const regex = new RegExp(text, "i");
+  match.$or = [
+    { propertyTitle: { $regex: regex } },
+    { propertyAddress: { $regex: regex } },
+    { propertyDesc: { $regex: regex } },
+    { propertyLocation: { $regex: regex } },  // works if location is string
+    { propertyCategory: { $regex: regex } },
+    { propertyType: { $regex: regex } },
+  ];
+}
 
  };
 public async getFavorites(memberId: ObjectId, input : OrdinaryInquiry) : Promise<Properties| null> {
