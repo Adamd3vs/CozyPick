@@ -14,7 +14,7 @@
 		"train": "nodemon --exec ts-node train.ts",
 		"start:debug": "nest start --debug --watch",
 		"start:prod": "NODE_ENV=production node dist/apps/cozypick-api/main",
-		"start:prod:batch": "node dist/apps/cozypicks-batch/main",
+		"start:prod:batch": "NODE_ENV=production node dist/apps/cozypicks-batch/main",
 		"lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
 		"test": "jest",
 		"test:watch": "jest --watch",
