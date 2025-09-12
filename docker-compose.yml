@@ -1,0 +1,49 @@
+services: 
+  cozypick-api:
+    container_name: cozypick-api
+    restart: always
+    image: node:20.19.5
+    ports:
+      - "4001:3001"
+    volumes: 
+      - ./:/usr/src/cozypick
+    environment:
+      - PORT_API=3001    
+    working_dir: /usr/src/cozypick
+    networks: 
+      -  monorepo-network
+
+      # for prod:
+    command: bash -c "npm install && npm run build && npm run start:prod"
+
+
+  cozypick-batch:
+    container_name: cozypick-batch
+    restart: unless-stopped
+    image: node:20.19.5
+    ports:
+      - "4002:3003"
+    volumes: 
+      - ./:/usr/src/cozypick
+    working_dir: /usr/src/cozypick
+    networks: 
+      -  monorepo-network
+
+      # for prod:
+    command: bash -c "npm install && npm run build && npm run start:prod:batch"
+
+networks: 
+  monorepo-network: 
+    driver: bridge
+
+
+
+
+
+
+
+
+
+# cozypick-next: localhost:4000 <==> container:3000
+# cozypick-api: localhost:4001 <==> container:3007
+# cozypick-batch: localhost:4002 <==> container:3008
