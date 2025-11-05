@@ -16,8 +16,8 @@ import { NoticesInquiry } from '../../libs/dto/notice/notice.input';
 export class NotificationService {
   constructor(
     @InjectModel('Notification') private readonly notificationModel: Model<Notification>,
-    @InjectModel('Member')       private readonly memberModel: Model<Member>,     // ✅ TO‘G‘RI TOKEN
-    @InjectModel('Property')     private readonly propertyModel: Model<Property>, // ✅
+    @InjectModel('Member')       private readonly memberModel: Model<Member>,     
+    @InjectModel('Property')     private readonly propertyModel: Model<Property>, 
   ) {}
 
   private async ensureMember(id: ObjectId) {
