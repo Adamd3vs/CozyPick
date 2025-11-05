@@ -13,7 +13,7 @@ import MemberSchema from '../../schemas/Member.model';
     MongooseModule.forFeature([
       { name: 'Notification', schema: NotificationSchema },
       { name: 'Property', schema: PropertySchema }, 
-      { name: 'Member', schema: MemberSchema },   // ← SHU QATOR SHART
+      { name: 'Member', schema: MemberSchema }, 
     ]),
     AuthModule
   ],
